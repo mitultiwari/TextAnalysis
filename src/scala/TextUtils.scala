@@ -38,25 +38,41 @@ class TextUtils {
     charMap = returnNGrams(text);
   }
 
-  // TODO: compute sum of counts of ngrams in the map
-  def sumNGramCounts(ngramMap: HashMap[String, Int]): Int = {
-    return 1;
+  // TODO:
+  def storeLangNGrams(ngramMap: HashMap[String, Int], filename:String){
+
   }
 
-  // TODO: compute similarity between given string and a language char map
+  // compute sum of counts of ngrams in the map
+  def sumNGramCounts(ngramMap: HashMap[String, Int]): Double = {
+    var sumNGramCount: Double = 0;
+    for((ngram, ngramCount) <- ngramMap){
+      sumNGramCount = sumNGramCount + ngramCount;
+    }
+    return sumNGramCount;
+  }
+
+  // compute similarity between given string and a language char map
   def computeNGramsSimilarity(langMap: HashMap[String, Int], testMap: HashMap[String, Int]): Double = {
     // TODO: store ratio of ngram_count/sum_ngram_counts in the map
     println("in computeNGramSimiliarity");
-    var langSum = sumNGramCounts(langMap);
-    var testSum = sumNGramCounts(testMap);
+    // var langSum = sumNGramCounts(langMap);
+    // var testSum = sumNGramCounts(testMap);
 
     var sumScore: Double = 0;
+    var sumTestNGram: Double = 0;
+    var sumLangNGram: Double = 0;
+    // sumNGram = sumNGramCounts(langMap);
     for((testNGram, nGramCount) <- testMap){
       println(testNGram + " " + nGramCount);
       var langCount = langMap.getOrElse(testNGram, 0);
       sumScore = sumScore + nGramCount * langCount;
+      sumTestNGram = sumTestNGram + nGramCount;
+      sumLangNGram = sumLangNGram + langCount;
     }
-    return sumScore;
+    println("sumScore:"+sumScore+ " sumTestNGram: "+ sumTestNGram+ " sumLangNGram: "+ sumLangNGram);
+    if(sumTestNGram*sumLangNGram == 0) return 0;
+    return (sumScore/(sumTestNGram*sumLangNGram));
   }
 
   // compute similarity between given string and a language char map
@@ -92,9 +108,11 @@ object TextUtils {
     // println(toUpper(var1));
     val myutil = new TextUtils();
     val data = myutil.readFile("/Users/mtiwari/tmp/testfile")
-    val testStr:String = "testing";
     myutil.computeNGrams(data);
     myutil.printCharMap();
-    myutil.computeLangSimilarity(testStr);
+
+    // val testStr:String = "testing";
+    myutil.computeLangSimilarity("testing");
+    myutil.computeLangSimilarity("xyz");
   }
 }
