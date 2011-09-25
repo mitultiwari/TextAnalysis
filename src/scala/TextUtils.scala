@@ -55,6 +55,33 @@ class TextUtils {
     fw.close()
   }
 
+  // store lang ngram map as an object
+  def storeLangNGramMap(filename:String){
+    println("Writing lang ngram map into file: "+filename);
+    try {
+      val oos = new ObjectOutputStream(new FileOutputStream(filename));
+			oos.writeObject(charMap);
+			oos.close();
+		} catch {
+      case e: FileNotFoundException => e.printStackTrace();
+      case ioe: IOException => ioe.printStackTrace();
+    }
+  }
+
+  def readLangNGramMap(filename:String){
+    println("Reading lang ngram map from file: "+filename);
+    try {
+			val obj = new ObjectInputStream(new FileInputStream(filename));
+      val readObj = obj.readObject();
+      charMap = readObj.asInstanceOf[HashMap[String, Int]];
+      printCharMap();
+		} catch {
+      case e: FileNotFoundException => e.printStackTrace();
+      case ioe: IOException => ioe.printStackTrace();
+      case cfe: ClassNotFoundException => cfe.printStackTrace();
+		}
+  }
+
   // compute sum of counts of ngrams in the map
   def sumNGramCounts(ngramMap: HashMap[String, Int]): Double = {
     var sumNGramCount: Double = 0;
@@ -123,6 +150,8 @@ object TextUtils {
     myutil.computeNGrams(data);
     myutil.printCharMap();
     myutil.storeLangNGrams("/Users/mtiwari/tmp/testing.ngram");
+    myutil.storeLangNGramMap("/Users/mtiwari/tmp/testing.ngram.map");
+    myutil.readLangNGramMap("/Users/mtiwari/tmp/testing.ngram.map");
 
     // val testStr:String = "testing";
     myutil.computeLangSimilarity("testing");
