@@ -60,9 +60,9 @@ class TextUtils {
     println("Writing lang ngram map into file: "+filename);
     try {
       val oos = new ObjectOutputStream(new FileOutputStream(filename));
-			oos.writeObject(charMap);
-			oos.close();
-		} catch {
+      oos.writeObject(charMap);
+      oos.close();
+    } catch {
       case e: FileNotFoundException => e.printStackTrace();
       case ioe: IOException => ioe.printStackTrace();
     }
@@ -71,15 +71,15 @@ class TextUtils {
   def readLangNGramMap(filename:String){
     println("Reading lang ngram map from file: "+filename);
     try {
-			val obj = new ObjectInputStream(new FileInputStream(filename));
+      val obj = new ObjectInputStream(new FileInputStream(filename));
       val readObj = obj.readObject();
       charMap = readObj.asInstanceOf[HashMap[String, Int]];
       printCharMap();
-		} catch {
+    } catch {
       case e: FileNotFoundException => e.printStackTrace();
       case ioe: IOException => ioe.printStackTrace();
       case cfe: ClassNotFoundException => cfe.printStackTrace();
-		}
+    }
   }
 
   // compute sum of counts of ngrams in the map
