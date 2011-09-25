@@ -1,11 +1,20 @@
 import scala.collection.mutable.HashMap;
+import java.io.FileWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 
 class TextUtils {
 
   var charMap = new HashMap[String, Int]; // store n-gram characters count
 
   def toUpper(var1 : String) : String = {
-    // println(var1.toUpperCase);
     return var1.toUpperCase;
   }
 
@@ -21,15 +30,14 @@ class TextUtils {
     var len = text.length();
     var max_index = ((len/3).toInt)*3;
     println(max_index);
-    // for(i <- 0 until (max_index-2) ){
     var i = 0;
     while(i+2 < len){
       var ngram :String = text.substring(i, i+3);
       i = i+1;
       println(ngram);
       var count : Int = (ngramMap.getOrElse(ngram, 0)).toInt;
-      count = count + 1;
-      ngramMap.put(ngram, count); // increment count
+      count = count + 1; // increment count
+      ngramMap.put(ngram, count);
     }
     return ngramMap;
   }
@@ -39,8 +47,12 @@ class TextUtils {
   }
 
   // TODO:
-  def storeLangNGrams(ngramMap: HashMap[String, Int], filename:String){
-
+  // def storeLangNGrams(ngramMap: HashMap[String, Int], filename:String){
+  def storeLangNGrams(filename:String){
+    val fw = new FileWriter(filename);
+    println("Writing file:"+filename);
+    fw.write(charMap.toString());
+    fw.close()
   }
 
   // compute sum of counts of ngrams in the map
@@ -110,9 +122,12 @@ object TextUtils {
     val data = myutil.readFile("/Users/mtiwari/tmp/testfile")
     myutil.computeNGrams(data);
     myutil.printCharMap();
+    myutil.storeLangNGrams("/Users/mtiwari/tmp/testing.ngram");
 
     // val testStr:String = "testing";
     myutil.computeLangSimilarity("testing");
     myutil.computeLangSimilarity("xyz");
+
+
   }
 }
